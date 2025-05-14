@@ -240,5 +240,36 @@ CHIP ALU {
         Mux(a=out15 , b=outtemp15 , sel=no , out=ng );
 
         // iszero
-        Or
+        Mux(a=out0 , b=outtemp0 , sel=no , out=zr0 );
+        Mux(a=out1 , b=outtemp1 , sel=no , out=zr1 );
+        Mux(a=out2 , b=outtemp2 , sel=no , out=zr2 );
+        Mux(a=out3 , b=outtemp3 , sel=no , out=zr3 );
+        Mux(a=out4 , b=outtemp4 , sel=no , out=zr4 );
+        Mux(a=out5 , b=outtemp5 , sel=no , out=zr5 );
+        Mux(a=out6 , b=outtemp6 , sel=no , out=zr6 );
+        Mux(a=out7 , b=outtemp7 , sel=no , out=zr7 );
+        Mux(a=out8 , b=outtemp8 , sel=no , out=zr8 );
+        Mux(a=out9 , b=outtemp9 , sel=no , out=zr9 );
+        Mux(a=out10 , b=outtemp10 , sel=no , out=zr10 );
+        Mux(a=out11 , b=outtemp11 , sel=no , out=zr11 );
+        Mux(a=out12 , b=outtemp12 , sel=no , out=zr12 );
+        Mux(a=out13 , b=outtemp13 , sel=no , out=zr13 );
+        Mux(a=out14 , b=outtemp14 , sel=no , out=zr14 );
+        Mux(a=out15 , b=outtemp15 , sel=no , out=zr15 );
+        Or(a=zr0 , b=zr1 , out=zr01 );
+        Or(a=zr2 , b=zr3 , out=zr23 );
+        Or(a=zr4 , b=zr5 , out=zr45 );
+        Or(a=zr6 , b=zr7 , out=zr67 );
+        Or(a=zr01 , b=zr23 , out=zr0123 );
+        Or(a=zr45 , b=zr67 , out=zr4567 );
+        Or(a=zr0123 , b=zr4567 , out=zr01234567 );
+        Or(a=zr01234567 , b=zr8 , out=zr012345678 );
+        Or(a=zr012345678 , b=zr9 , out=zr0123456789 );
+        Or(a=zr0123456789 , b=zr10 , out=zr012345678910 );
+        Or(a=zr012345678910 , b=zr11 , out=zr01234567891011 );
+        Or(a=zr01234567891011 , b=zr12 , out=zr0123456789101112 );
+        Or(a=zr0123456789101112 , b=zr13 , out=zr012345678910111213 );
+        Or(a=zr012345678910111213 , b=zr14 , out=zr01234567891011121314 );
+        Or(a=zr01234567891011121314 , b=zr15 , out=zrtemp );
+        Not(in=zrtemp , out=zr );
 }
