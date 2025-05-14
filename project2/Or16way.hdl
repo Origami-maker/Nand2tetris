@@ -1,0 +1,30 @@
+// Implemenatation of the Or16way chip
+// The Or16way chip is a 16-input OR gate.
+// Computes out = x[0] | x[1] | ... | x[15]
+
+CHIP Or16way {
+    In
+        x[16]; // 16-bit input
+    Out
+        out; // 1-bit output
+
+    PARTS:
+        Or(a=x[0], b=x[1], out=out0);
+        Or(a=x[2], b=x[3], out=out1);
+        Or(a=x[4], b=x[5], out=out2);
+        Or(a=x[6], b=x[7], out=out3);
+        Or(a=x[8], b=x[9], out=out4);
+        Or(a=x[10], b=x[11], out=out5);
+        Or(a=x[12], b=x[13], out=out6);
+        Or(a=x[14], b=x[15], out=out7);
+
+        Or(a=out0, b=out1, out=out8);
+        Or(a=out2, b=out3, out=out9);
+        Or(a=out4, b=out5, out=out10);
+        Or(a=out6, b=out7, out=out11);
+
+        Or(a=out8, b=out9, out=out12);
+        Or(a=out10, b=out11, out=out13);
+
+        Or(a=out12, b=out13, out=out);
+}
