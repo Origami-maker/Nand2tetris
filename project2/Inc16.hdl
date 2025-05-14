@@ -1,0 +1,47 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/2/Inc16.hdl
+/**
+ * 16-bit incrementer:
+ * out = in + 1
+ */
+CHIP Inc16 {
+    IN in[16];
+    OUT out[16];
+
+    PARTS:
+        Not(in=false , out=b0 );
+        And(a=false , b=false , out=b1 );
+        And(a=false , b=false , out=b2 );
+        And(a=false , b=false , out=b3 );
+        And(a=false , b=false , out=b4 );
+        And(a=false , b=false , out=b5 );
+        And(a=false , b=false , out=b6 );
+        And(a=false , b=false , out=b7 );
+        And(a=false , b=false , out=b8 );
+        And(a=false , b=false , out=b9 );
+        And(a=false , b=false , out=b10 );
+        And(a=false , b=false , out=b11 );
+        And(a=false , b=false , out=b12 );
+        And(a=false , b=false , out=b13 );
+        And(a=false , b=false , out=b14 );
+        And(a=false , b=false , out=b15 );
+
+        HalfAdder(a=in[0] , b=b0 , sum=out[0] , carry=c0 );
+        FullAdder(a=in[1] , b=b1 , c=c0 , sum=out[1] , carry=c1 );
+        FullAdder(a=in[2] , b=b2 , c=c1 , sum=out[2] , carry=c2 );
+        FullAdder(a=in[3] , b=b3 , c=c2 , sum=out[3] , carry=c3 );
+        FullAdder(a=in[4] , b=b4 , c=c3 , sum=out[4] , carry=c4 );
+        FullAdder(a=in[5] , b=b5 , c=c4 , sum=out[5] , carry=c5 );
+        FullAdder(a=in[6] , b=b6 , c=c5 , sum=out[6] , carry=c6 );
+        FullAdder(a=in[7] , b=b7 , c=c6 , sum=out[7] , carry=c7 );
+        FullAdder(a=in[8] , b=b8 , c=c7 , sum=out[8] , carry=c8 );
+        FullAdder(a=in[9] , b=b9 , c=c8 , sum=out[9] , carry=c9 );
+        FullAdder(a=in[10] , b=b10 , c=c9 , sum=out[10] , carry=c10 );
+        FullAdder(a=in[11] , b=b11 , c=c10 , sum=out[11] , carry=c11 );
+        FullAdder(a=in[12] , b=b12 , c=c11 , sum=out[12] , carry=c12 );
+        FullAdder(a=in[13] , b=b13 , c=c12 , sum=out[13] , carry=c13 );
+        FullAdder(a=in[14] , b=b14 , c=c13 , sum=out[14] , carry=c14 );
+        FullAdder(a=in[15] , b=b15 , c=c14 , sum=out[15] , carry=c15 );
+}
