@@ -10,7 +10,8 @@ class Parser {
         enum class InstructionType {
             A_INSTRUCTION,
             C_INSTRUCTION,
-            L_INSTRUCTION
+            L_INSTRUCTION,
+            NO_INSTRUCTION
         };
 
     private:
@@ -24,9 +25,11 @@ class Parser {
         Parser(const std::string& FILE_NAME) : inputFile(FILE_NAME) {
             if(!inputFile) {
                 std::cerr << "Error: Could not open file " << FILE_NAME << std::endl;
+                throw std::runtime_error("File not found or could not be opened.");
             }
             if (inputFile.eof()) {
                 std::cerr << "Error: File " << FILE_NAME << " is empty." << std::endl;
+                throw std::runtime_error("File is empty.");
             }
         };
 
@@ -35,7 +38,7 @@ class Parser {
                 return false;
             }
             std::getline(inputFile, currentLine);
-            return !currentLine.empty();
+            return true;
         }
 
         void advance() {
@@ -58,7 +61,8 @@ class Parser {
 
         InstructionType instructionType() {
             if (currentCommand.empty()) {
-                std::cerr << "Error: No command to process." << std::endl;
+                std::cout << "No instructin found in the current line. skipping..." << std::endl;
+                return InstructionType::NO_INSTRUCTION;
             }
             if (currentCommand[0] == '@') {
                 currentInstructionType = InstructionType::A_INSTRUCTION;
@@ -80,7 +84,7 @@ class Parser {
                 return currentCommand.substr(1, currentCommand.size() - 2);
             } else {
                 std::cerr << "Error: Current command is not an A or L instruction." << std::endl;
-                return "";
+                throw std::runtime_error("Current command is not an A or L instruction.");
             }
         }
 
@@ -89,12 +93,12 @@ class Parser {
             if (eqPos != std::string::npos) {
                 return currentCommand.substr(0, eqPos);
             } else {
-                return "";
+                return "null"; // No destination
             }
 
             if (currentInstructionType != InstructionType::C_INSTRUCTION) {
                 std::cerr << "Error: Current command is not a C instruction." << std::endl;
-                return "";
+                throw std::runtime_error("Current command is not a C instruction.");
             }
         }
 
@@ -119,7 +123,7 @@ class Parser {
 
             if (currentInstructionType != InstructionType::C_INSTRUCTION) {
                 std::cerr << "Error: Current command is not a C instruction." << std::endl;
-                return "";
+                throw std::runtime_error("Current command is not a C instruction.");
             }
         }
 
@@ -128,12 +132,12 @@ class Parser {
             if (semicolonPos != std::string::npos) {
                 return currentCommand.substr(semicolonPos + 1);
             } else {
-                return "";
+                return "null"; // No jump
             }
 
             if (currentInstructionType != InstructionType::C_INSTRUCTION) {
                 std::cerr << "Error: Current command is not a C instruction." << std::endl;
-                return "";
+                throw std::runtime_error("Current command is not a C instruction.");
             }
         }
 };
