@@ -6,6 +6,7 @@
 class SymbolTable {
     private:
         std::unordered_map<std::string, int> symbolTable;
+        int nextAvailableAddress = 16; // Starting address for user-defined symbols
 
     public:
         SymbolTable():
@@ -19,4 +20,29 @@ class SymbolTable {
                 {"SP", 0}, {"LCL", 1}, {"ARG", 2}, {"THIS", 3},
                 {"THAT", 4}
             }) {};
+
+        void addLabelEntry(std::string& symbol, const int& address) {
+            if (symbolTable.find(symbol) == symbolTable.end()) {
+                symbolTable[symbol] = address;
+            }
+        }
+
+        void addSymbolEntry(std::string& symbol) {
+            if (symbolTable.find(symbol) == symbolTable.end()) {
+                symbolTable[symbol] = nextAvailableAddress++;
+            }
+        }
+
+        bool contains(std::string& symbol) {
+            return symbolTable.find(symbol) != symbolTable.end();
+        }
+
+        int getAddress(std::string& symbol) {
+            if (contains(symbol)) {
+                return symbolTable[symbol];
+            } else {
+                std::cerr << "Error: Symbol '" << symbol << "' not found in the symbol table." << std::endl;
+                throw std::runtime_error("Symbol not found.");
+            }
+        }
 };

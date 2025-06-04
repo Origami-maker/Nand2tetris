@@ -17,6 +17,7 @@ class Parser {
     private:
         std::ifstream inputFile;
         std::string currentLine;
+        int currentLineNumber = -1; // Start at -1 to account for the first line being read
         std::string currentCommand;
         InstructionType currentInstructionType;
     
@@ -38,14 +39,23 @@ class Parser {
                 return false;
             }
             std::getline(inputFile, currentLine);
+            // currentLineNumber++; // Not increment here, because we want to increment it only when the current line has a valid instruction
             return true;
         }
 
         void advance() {
-            // Remove whitespcae and comments
-            size_t commetPos = currentLine.find("//");
-            std::string noCommentLine = (commetPos != std::string::npos) ? currentLine.substr(0, commetPos) : currentLine;
-
+            if (currentLine.empty()) {
+                currentCommand = "";
+                return; // No command to process
+            }
+            // Remove whitespace and comments
+            size_t commentPos = currentLine.find("//");
+            std::string noCommentLine = (commentPos != std::string::npos) ? currentLine.substr(0, commentPos) : currentLine;
+            
+            if (std::all_of(noCommentLine.begin(), noCommentLine.end(), [](unsigned char c) { return std::isspace(c); })) {
+                currentCommand = ""; // If the line is only whitespace, set currentCommand to empty
+                return;
+            }
             auto it1 = noCommentLine.begin();
             while( it1 != noCommentLine.end() && std::isspace(static_cast<unsigned char>(*it1))) {
                 ++it1;
@@ -64,10 +74,12 @@ class Parser {
                 std::cout << "No instructin found in the current line. skipping..." << std::endl;
                 return InstructionType::NO_INSTRUCTION;
             }
+            currentLineNumber++;
             if (currentCommand[0] == '@') {
                 currentInstructionType = InstructionType::A_INSTRUCTION;
                 return InstructionType::A_INSTRUCTION;
             } else if (currentCommand[0] == '(' && currentCommand.back() == ')') {
+                currentLineNumber--; // Do not count label lines in the line number
                 currentInstructionType = InstructionType::L_INSTRUCTION;
                 return InstructionType::L_INSTRUCTION;
             } else {
@@ -139,5 +151,9 @@ class Parser {
                 std::cerr << "Error: Current command is not a C instruction." << std::endl;
                 throw std::runtime_error("Current command is not a C instruction.");
             }
+        }
+
+        int getCurrentLineNumber() const {
+            return currentLineNumber;
         }
 };
