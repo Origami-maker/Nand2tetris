@@ -42,10 +42,18 @@ class Parser {
         }
 
         void advance() {
-            // Remove whitespcae and comments
-            size_t commetPos = currentLine.find("//");
-            std::string noCommentLine = (commetPos != std::string::npos) ? currentLine.substr(0, commetPos) : currentLine;
+            if (currentLine.empty()) {
+                currentCommand = "";
+                return; // No command to process
+            }
+            // Remove whitespace and comments
+            size_t commentPos = currentLine.find("//");
+            std::string noCommentLine = (commentPos != std::string::npos) ? currentLine.substr(0, commentPos) : currentLine;
 
+            if (std::all_of(noCommentLine.begin(), noCommentLine.end(), [](unsigned char c) { return std::isspace(c); })) {
+                currentCommand = ""; // If the line is only whitespace, set currentCommand to empty
+                return;
+            }
             auto it1 = noCommentLine.begin();
             while( it1 != noCommentLine.end() && std::isspace(static_cast<unsigned char>(*it1))) {
                 ++it1;
